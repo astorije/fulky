@@ -49,12 +49,12 @@ require.extensions['.md'] = function (module, filename) {
   var test = `
     ${initBlock.join("\n")}
 
-    describe('Markdown file: ${filename}', () => {
+    describe('Markdown file: ${filename}', function () {
       ${examples.map((example, index) => {
         let preview = example.replace(/'/g, "\\'");
         preview = preview.substr(0, preview.indexOf("\n")) || preview;
 
-        return `it('should run API example #${index + 1}: ${preview}', () => {
+        return `it('should run API example #${index + 1}: ${preview}', function () {
           ${example}
         });`;
       }).join("\n")}
