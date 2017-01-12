@@ -1,0 +1,19 @@
+{
+  "name": "fulky",
+  "version": "0.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astorije/fulky.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/astorije/fulky/issues"
+  },
+  "homepage": "https://github.com/astorije/fulky#readme"
+}
