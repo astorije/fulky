@@ -29,4 +29,12 @@ describe('Executing Markdown fixtures against the Mocha compiler', () => {
     expect(result.stdout).to.include('1 failing');
     expect(result.stdout).to.include('AssertionError: false == true');
   });
+
+  it('should skip examples marked with `skip-test`', () => {
+    const result = runFixture('skip-test');
+
+    expect(result.status).to.equal(0);
+    expect(result.stdout).to.include('1 passing');
+    expect(result.stdout).to.include("should run API example #1: require('assert').ok(true);");
+  });
 });

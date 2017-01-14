@@ -1,4 +1,4 @@
-# Basic failing example
+# Basic usage - Failing example
 
 This example will make test runners fail.
 
