@@ -22,9 +22,9 @@ require.extensions['.md'] = function (module, filename) {
     } else if ((content[i] === '```js' || content[i] === '```javascript') &&
         (i === 0 || content[i - 1] !== '<!-- skip-test -->')) {
 
-      const defined = content[i - 1].match(/<!-- define ([a-z]+) -->/);
+      const defined = content[i - 1].match(/<!-- define ([a-z-]+) -->/);
 
-      const usingDefinition = content[i - 1].match(/<!-- use ([a-z]+) -->/);
+      const usingDefinition = content[i - 1].match(/<!-- use ([a-z-]+) -->/);
 
       ++i;
       let example = [];

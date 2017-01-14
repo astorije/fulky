@@ -37,4 +37,11 @@ describe('Executing Markdown fixtures against the Mocha compiler', () => {
     expect(result.stdout).to.include('1 passing');
     expect(result.stdout).to.include("should run API example #1: require('assert').ok(true);");
   });
+
+  it('should save a `define`d example and prepend it later with `use`', () => {
+    const result = runFixture('define-and-use');
+
+    expect(result.status).to.equal(0);
+    expect(result.stdout).to.include('2 passing');
+  });
 });
