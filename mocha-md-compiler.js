@@ -47,6 +47,8 @@ require.extensions['.md'] = function (module, filename) {
   }
 
   var test = `
+    'use strict';
+
     ${initBlock.join("\n")}
 
     describe('Markdown file: ${filename}', function () {
