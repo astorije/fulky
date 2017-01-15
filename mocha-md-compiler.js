@@ -2,54 +2,125 @@
 
 const fs = require('fs');
 
-require.extensions['.md'] = function (module, filename) {
-  let initBlock = [];
-  let examples = [];
-  let definitions = {};
+const formats = {
+  command: /^<!--[\s\n]*([\s\S]+?)[\s\n]*-->/,
+  code: /^```(?:js|javascript)[\s\n]*\n+([\s\S]+?)```/,
+  newline: /^\s*\n+/,
+  unknown: /.*/
+};
 
-  const content = fs.readFileSync(filename, 'utf8').split("\n");
+function tokenize(content) {
+  let match;
+  let token;
 
-  let i = 0;
+  if (match = content.match(formats.newline)) {
+    token = null;
+  } else if (match = content.match(formats.code)) {
+    token = {
+      type: 'code',
+      code: match[1],
+    };
 
-  while (i < content.length) {
-
-    if (content[i] === '<!-- init-block') {
-      ++i;
-      while (i < content.length && content[i] !== '-->') {
-        initBlock.push(content[i]);
-        ++i;
-      }
-    } else if ((content[i] === '```js' || content[i] === '```javascript') &&
-        (i === 0 || content[i - 1] !== '<!-- skip-test -->')) {
-
-      const defined = content[i - 1].match(/<!-- define ([a-z-]+) -->/);
-
-      const usingDefinition = content[i - 1].match(/<!-- use ([a-z-]+) -->/);
-
-      ++i;
-      let example = [];
-
-      if (usingDefinition) {
-        example = definitions[usingDefinition[1]].slice(0);
-      }
-
-      while (i < content.length && content[i] !== '```') {
-        example.push(content[i]);
-        ++i;
-      }
-
-      if (defined) {
-        definitions[defined[1]] = example;
-      }
-      examples.push(example.join("\n"));
-    }
-    ++i;
+  } else if (match = content.match(formats.command)) {
+    token = {
+      type: 'command',
+      command: match[1]
+    };
+  } else if (match = content.match(formats.unknown)) {
+    token = {
+      type: 'unknown'
+    };
+  } else {
+    throw 'boom'; // TODO Get rid of this
   }
 
-  var test = `
+  return {
+    contentRemainder: content.substring(match[0].length),
+    token: token
+  };
+}
+
+function lex(content) {
+  const tokens = [];
+
+  while (content) {
+    const result = tokenize(content);
+    content = result.contentRemainder;
+    let token = result.token;
+
+    if (token === null) {
+      continue;
+    }
+
+    if (token.type === 'unknown' && tokens.length > 0 && tokens[tokens.length - 1].type === 'unknown') {
+      continue;
+    }
+
+    tokens.push(token);
+  }
+
+  return tokens;
+}
+
+function parse(tokens) {
+
+  return tokens.reduce((acc, token, index) => {
+    switch (token.type) {
+      case 'command':
+        if (token.command.startsWith('init-block')) {
+          acc.initBlock = token.command.substr(10);
+          break;
+        }
+        // Find next token that is not a command
+        while (tokens[index] && tokens[index].type === 'command') {
+          ++index;
+        }
+        if (tokens[index] && tokens[index].type === 'code') {
+          let match;
+          if (token.command === 'skip-test') {
+            tokens[index].skip = true;
+          } else if (match = token.command.match(/define (\w+)/)) {
+            tokens[index].name = match[1];
+          } else if (match = token.command.match(/use (\w+)/)) {
+            tokens[index].use = tokens[index].use || [];
+            tokens[index].use.push(match[1]);
+          } else {
+            // Error: command not attached to code?
+          }
+        }
+        break;
+      case 'code':
+        let code = token.code;
+        if (token.use && token.use.length > 0) {
+          code = token.use.reduce(
+            (acc2, name) => acc2 + acc.declarations.get(name),
+            ''
+          ) + code;
+        }
+        if (token.name) {
+          acc.declarations.set(token.name, code);
+        }
+        if (!token.skip) {
+          acc.code.push(code);
+        }
+        break;
+    }
+
+    return acc;
+  }, { initBlock: '', code: [], declarations: new Map() });
+}
+
+require.extensions['.md'] = function (module, filename) {
+  const content = fs.readFileSync(filename, 'utf8');
+  const tokens = lex(content);
+  const parsed = parse(tokens);
+  const initBlock = parsed.initBlock;
+  const examples = parsed.code;
+
+  const test = `
     'use strict';
 
-    ${initBlock.join("\n")}
+    ${initBlock}
 
     describe('Markdown file: ${filename}', function () {
       ${examples.map((example, index) => {
