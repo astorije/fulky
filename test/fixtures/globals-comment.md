@@ -2,7 +2,7 @@
 
 Statements in the `globals` block will be run once prior to any test execution.
 
-<!-- globals
+<!-- fulky:globals
 const chai = require('chai');
 const expect = chai.expect;
 -->

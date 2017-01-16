@@ -3,7 +3,7 @@
 const fs = require('fs');
 
 const formats = {
-  command: /^<!--[\s\n]*([\s\S]+?)[\s\n]*-->/,
+  command: /^<!--[\s\n]*fulky:([\s\S]+?)[\s\n]*-->/,
   code: /^```(?:js|javascript)[\s\n]*\n+([\s\S]+?)```/,
   newline: /^\s*\n+/,
   unknown: /.*/
