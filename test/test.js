@@ -45,10 +45,10 @@ describe('Executing Markdown fixtures against the Mocha compiler', () => {
     expect(result.stdout).to.include('2 passing');
   });
 
-  it('should run `init-block` once before all tests are run', () => {
-    const result = runFixture('init-block');
+  it('should run `globals` once before all tests are run', () => {
+    const result = runFixture('globals-comment');
 
     expect(result.status).to.equal(0);
-    expect(result.stdout).to.include('2 passing');
+    expect(result.stdout).to.include('1 passing');
   });
 });

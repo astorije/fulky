@@ -67,8 +67,8 @@ function parse(tokens) {
   return tokens.reduce((acc, token, index) => {
     switch (token.type) {
       case 'command':
-        if (token.command.startsWith('init-block')) {
-          acc.initBlock = token.command.substr(10);
+        if (token.command.startsWith('globals')) {
+          acc.globals = token.command.substr(7 + 1);
           break;
         }
         // Find next token that is not a command
@@ -107,20 +107,20 @@ function parse(tokens) {
     }
 
     return acc;
-  }, { initBlock: '', code: [], declarations: new Map() });
+  }, { globals: '', code: [], declarations: new Map() });
 }
 
 require.extensions['.md'] = function (module, filename) {
   const content = fs.readFileSync(filename, 'utf8');
   const tokens = lex(content);
   const parsed = parse(tokens);
-  const initBlock = parsed.initBlock;
+  const globals = parsed.globals;
   const examples = parsed.code;
 
   const test = `
     'use strict';
 
-    ${initBlock}
+    ${globals}
 
     describe('Markdown file: ${filename}', function () {
       ${examples.map((example, index) => {
