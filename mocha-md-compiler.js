@@ -31,8 +31,8 @@ function parse(tokens) {
   return tokens.reduce((acc, token, index) => {
     switch (token.type) {
       case 'command':
-        if (token.command.startsWith('globals')) {
-          acc.globals = token.command.substr(7 + 1);
+        if (token.command === 'globals') {
+          acc.globals = token.body;
           break;
         }
         // Find next token that is not a command
@@ -40,14 +40,13 @@ function parse(tokens) {
           ++index;
         }
         if (tokens[index] && tokens[index].type === 'code') {
-          let match;
           if (token.command === 'skip-test') {
             tokens[index].skip = true;
-          } else if (match = token.command.match(/define (\w+)/)) {
-            tokens[index].name = match[1];
-          } else if (match = token.command.match(/use (\w+)/)) {
+          } else if (token.command === 'define') {
+            tokens[index].name = token.arguments[0];
+          } else if (token.command === 'use') {
             tokens[index].use = tokens[index].use || [];
-            tokens[index].use.push(match[1]);
+            tokens[index].use.push(token.arguments[0]);
           } else {
             // Error: command not attached to code?
           }
