@@ -27,46 +27,50 @@ function lex(content) {
 }
 
 function parse(tokens) {
+  // As commands are parsed, this buffer gets populated to be applied to the
+  // next code block following the command. This allows for cumulating commands.
+  let commandBuffer = {};
 
-  return tokens.reduce((acc, token, index) => {
+  return tokens.reduce((acc, token) => {
     switch (token.type) {
       case 'command':
-        if (token.command === 'globals') {
-          acc.globals = token.body;
-          break;
-        }
-        // Find next token that is not a command
-        while (tokens[index] && tokens[index].type === 'command') {
-          ++index;
-        }
-        if (tokens[index] && tokens[index].type === 'code') {
-          if (token.command === 'skip-test') {
-            tokens[index].skip = true;
-          } else if (token.command === 'define') {
-            tokens[index].name = token.arguments[0];
-          } else if (token.command === 'use') {
-            tokens[index].use = tokens[index].use || [];
-            tokens[index].use.push(token.arguments[0]);
-          } else {
-            // Error: command not attached to code?
-          }
+        switch (token.command) {
+          case 'globals':
+            acc.globals = token.body;
+            break;
+          case 'skip-test':
+            commandBuffer.skip = true;
+            break;
+          case 'define':
+            commandBuffer.name = token.arguments[0];
+            break;
+          case 'use':
+            commandBuffer.use = commandBuffer.use || [];
+            commandBuffer.use.push(token.arguments[0]);
+            break;
         }
         break;
       case 'code':
         let code = token.code;
-        if (token.use && token.use.length > 0) {
-          code = token.use.reduce(
+        if (commandBuffer.use && commandBuffer.use.length > 0) {
+          code = commandBuffer.use.reduce(
             (acc2, name) => acc2 + acc.declarations.get(name),
             ''
           ) + code;
         }
-        if (token.name) {
-          acc.declarations.set(token.name, code);
+        if (commandBuffer.name) {
+          acc.declarations.set(commandBuffer.name, code);
         }
-        if (!token.skip) {
+        if (!commandBuffer.skip) {
           acc.code.push(code);
         }
+        // All commands have been applied to this code block, clear it
+        commandBuffer = {};
         break;
+      default:
+        // No code block was following the previously met command(s), clear the
+        // command buffer to avoid leaking onto the next command.
+        commandBuffer = {};
     }
 
     return acc;
