@@ -68,9 +68,15 @@ function parse(tokens) {
         commandBuffer = {};
         break;
       default:
-        // No code block was following the previously met command(s), clear the
-        // command buffer to avoid leaking onto the next command.
-        commandBuffer = {};
+        // If the command buffer is not empty here, it means that something else
+        // than a code block was met after the previous command(s) and before a
+        // code block.
+        // This is means the document is erroneous.
+        if (Object.keys(commandBuffer).length > 0) {
+          throw new SyntaxError(
+            'Inline commands must be directly followed by a code block.'
+          );
+        }
     }
 
     return acc;
