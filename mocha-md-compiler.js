@@ -23,6 +23,10 @@ function lex(content) {
     tokens.push(token);
   }
 
+  // Adding an end-of-file token to symbolize that the document was entirely
+  // read. This is for example useful to check if there was a pending command.
+  tokens.push({ type: 'EOF' });
+
   return tokens;
 }
 
@@ -70,7 +74,7 @@ function parse(tokens) {
       default:
         // If the command buffer is not empty here, it means that something else
         // than a code block was met after the previous command(s) and before a
-        // code block.
+        // code block or that EOF was reached with an inline command at the end.
         // This is means the document is erroneous.
         if (Object.keys(commandBuffer).length > 0) {
           throw new SyntaxError(

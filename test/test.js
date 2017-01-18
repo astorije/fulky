@@ -60,4 +60,13 @@ describe('Executing Markdown fixtures against the Mocha compiler', () => {
       'Inline commands must be directly followed by a code block.'
     );
   });
+
+  it('should fail when a document is ending with an inline command', () => {
+    const result = runFixture('error-command-eof');
+
+    expect(result.status).to.equal(1);
+    expect(result.stderr).to.include(
+      'Inline commands must be directly followed by a code block.'
+    );
+  });
 });
