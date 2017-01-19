@@ -30,6 +30,15 @@ describe('Executing Markdown fixtures against the Mocha compiler', () => {
     expect(result.stdout).to.include('AssertionError: false == true');
   });
 
+  it('should pass against an empty document', () => {
+    const result = runFixture('empty');
+
+    expect(result.status).to.equal(0);
+    expect(result.stdout).to.include('0 passing');
+    expect(result.stdout).to.not.include('failing');
+    expect(result.stderr).to.be.empty;
+  });
+
   it('should skip examples marked with `skip-test`', () => {
     const result = runFixture('skip-test');
 
