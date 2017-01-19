@@ -1,6 +1,6 @@
-# Using `globals`
+# Using `globals` with a body
 
-Statements in the `globals` block will be run once prior to any test execution.
+Statements in the body of `globals` will be run once prior to any test execution.
 
 <!-- fulky:globals
 const chai = require('chai');

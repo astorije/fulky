@@ -54,11 +54,18 @@ describe('Executing Markdown fixtures against the Mocha compiler', () => {
     expect(result.stdout).to.include('2 passing');
   });
 
-  it('should run `globals` once before all tests are run', () => {
+  it('should run body of `globals` once before all tests are run', () => {
     const result = runFixture('globals-comment');
 
     expect(result.status).to.equal(0);
     expect(result.stdout).to.include('1 passing');
+  });
+
+  it('should run a `globals` code block once before all tests are run', () => {
+    const result = runFixture('globals-code-block');
+
+    expect(result.status).to.equal(0);
+    expect(result.stdout).to.include('2 passing');
   });
 
   it('should fail when an inline command is not followed by a code block', () => {

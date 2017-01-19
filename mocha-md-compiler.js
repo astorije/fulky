@@ -40,7 +40,15 @@ function parse(tokens) {
       case 'command':
         switch (token.command) {
           case 'globals':
-            acc.globals = token.body;
+            // `globals` can either have a body hidden from the rendered
+            // document or be attached to a code block.
+            // If there is a body, then the next code block is just a regular
+            // code block.
+            if (token.body) {
+              acc.globals = token.body;
+            } else {
+              commandBuffer.globals = true;
+            }
             break;
           case 'skip-test':
             commandBuffer.skip = true;
@@ -56,6 +64,12 @@ function parse(tokens) {
         break;
       case 'code':
         let code = token.code;
+        if (commandBuffer.globals) {
+          acc.globals = token.code;
+          // No other commands can be applied, reset buffer and go to next token
+          commandBuffer = {};
+          break;
+        }
         if (commandBuffer.use && commandBuffer.use.length > 0) {
           code = commandBuffer.use.reduce(
             (acc2, name) => acc2 + acc.declarations.get(name),
