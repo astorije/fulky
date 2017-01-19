@@ -40,4 +40,46 @@ describe('#parse(tokens)', () => {
       });
     });
   });
+
+  describe('when cumulating inline commands with `globals`', () => {
+    const incompatibleTokens = inlineCommandTokens
+      .filter(commandToken => commandToken.command !== 'globals');
+
+    describe('with a body', () => {
+      incompatibleTokens.forEach(commandToken => {
+        it(`should throw an error for ${commandToken.command}`, () => {
+          const tokens = [
+            commandToken,
+            {
+              type: 'command',
+              command: 'globals',
+              body: "require('assert').ok(true);"
+            },
+          ];
+
+          expect(() => { parse(tokens); }).to.throw(
+            SyntaxError,
+            new RegExp('`globals` must not be used with.*' + commandToken.command)
+          );
+        });
+      });
+    });
+
+    describe('with a code block', () => {
+      incompatibleTokens.forEach(commandToken => {
+        it(`should throw an error for ${commandToken.command}`, () => {
+          const tokens = [
+            commandToken,
+            { type: 'command', command: 'globals' },
+            { type: 'code', code: "require('assert').ok(true);" },
+          ];
+
+          expect(() => { parse(tokens); }).to.throw(
+            SyntaxError,
+            new RegExp('`globals` must not be used with.*' + commandToken.command)
+          );
+        });
+      });
+    });
+  });
 });
