@@ -70,7 +70,7 @@ function parse(tokens) {
           commandBuffer = {};
           break;
         }
-        if (commandBuffer.use && commandBuffer.use.length > 0) {
+        if (commandBuffer.use) {
           code = commandBuffer.use.reduce(
             (acc2, name) => acc2 + acc.declarations.get(name),
             ''
