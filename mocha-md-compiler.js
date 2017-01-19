@@ -66,22 +66,31 @@ function parse(tokens) {
         let code = token.code;
         if (commandBuffer.globals) {
           acc.globals = token.code;
-          // No other commands can be applied, reset buffer and go to next token
-          commandBuffer = {};
-          break;
+
+          if (commandBuffer.use || commandBuffer.name || commandBuffer.skip) {
+            throw new SyntaxError(
+              '`globals` must not be used with `use`, `name` or `skip-test`.'
+            );
+          }
+
+          commandBuffer.skip = true;
         }
+
         if (commandBuffer.use) {
           code = commandBuffer.use.reduce(
             (acc2, name) => acc2 + acc.declarations.get(name),
             ''
           ) + code;
         }
+
         if (commandBuffer.name) {
           acc.declarations.set(commandBuffer.name, code);
         }
+
         if (!commandBuffer.skip) {
           acc.code.push(code);
         }
+
         // All commands have been applied to this code block, clear it
         commandBuffer = {};
         break;
