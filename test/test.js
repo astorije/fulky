@@ -11,7 +11,13 @@ function runFixture(fixture) {
   );
 }
 
-describe('Executing Markdown fixtures against the Mocha compiler', () => {
+describe('Executing Markdown fixtures against the Mocha compiler', function () {
+  // On dev and CI environments, each call to `spawnSync` takes about ~200-250ms
+  // so Mocha's default "slow" test threshold of 75ms always marks them in red.
+  // This marks tests > 300ms in yellow and > 600ms in red. It is suitable for
+  // tests with a single call to `spawnSync`.
+  this.slow(600);
+
   it('should pass a simple passing fixture', () => {
     const result = runFixture('basic-passing');
 
