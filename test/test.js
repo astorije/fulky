@@ -73,4 +73,11 @@ describe('Executing Markdown fixtures against the Mocha compiler', function () {
     expect(result.status).to.equal(0);
     expect(result.stdout).to.include('2 passing');
   });
+
+  it('should allow for multiple `globals` commands', () => {
+    const result = runFixture('globals-multiple-times');
+
+    expect(result.status).to.equal(0);
+    expect(result.stdout).to.include('1 passing');
+  });
 });
