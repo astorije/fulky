@@ -114,6 +114,23 @@ describe('#tokenize(content)', () => {
           contentRemainder: ''
         });
       });
+
+      it('should correctly extract a command followed by another one', () => {
+        expect(tokenize(
+          `<!-- fulky:foo
+          block1();
+          -->
+          <!-- fulky:bar
+          block2();
+          -->`
+        )).to.deep.equal({
+          token: { type: 'command', command: 'foo', body: `block1();` },
+          contentRemainder: `
+          <!-- fulky:bar
+          block2();
+          -->`
+        });
+      });
     });
 
     describe('with positional arguments and a body', () => {
