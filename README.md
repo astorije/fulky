@@ -6,7 +6,7 @@
 
 ## Usage
 
-## Use it with [Mocha](https://mochajs.org/)
+### Use it with [Mocha](https://mochajs.org/)
 
 Run it with:
 
@@ -14,7 +14,7 @@ Run it with:
 mocha --compilers md:fulky/md-compiler *.md
 ```
 
-## Use it with [Jasmine](https://jasmine.github.io/)
+### Use it with [Jasmine](https://jasmine.github.io/)
 
 In your `spec/support/jasmine.json` configuration file, add:
 
