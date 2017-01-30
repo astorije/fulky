@@ -4,8 +4,9 @@
   "description": "",
   "main": "",
   "scripts": {
-    "test": "mocha",
-    "fixture": "mocha --compilers md:mocha-md-compiler"
+    "fixtures-jasmine": "jasmine JASMINE_CONFIG_PATH=test/jasmine.json",
+    "fixtures-mocha": "mocha --compilers md:md-compiler test/**/*.md",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/astorije/fulky#readme",
   "devDependencies": {
     "chai": "^3.5.0",
+    "jasmine": "^2.5.3",
     "mocha": "^3.2.0"
   }
 }
