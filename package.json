@@ -4,7 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
-    "fixtures-jasmine": "jasmine JASMINE_CONFIG_PATH=test/jasmine.json",
+    "fixtures-jasmine": "jasmine JASMINE_CONFIG_PATH=test/runners/jasmine.json",
     "fixtures-mocha": "mocha --compilers md:md-compiler test/**/*.md",
     "test": "mocha"
   },
