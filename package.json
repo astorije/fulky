@@ -4,6 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
+    "fixtures-ava": "ava",
     "fixtures-jasmine": "jasmine JASMINE_CONFIG_PATH=test/runners/jasmine.json",
     "fixtures-mocha": "mocha --compilers md:md-compiler test/**/*.md",
     "test": "mocha"
@@ -19,8 +20,15 @@
   },
   "homepage": "https://github.com/astorije/fulky#readme",
   "devDependencies": {
+    "ava": "^0.17.0",
     "chai": "^3.5.0",
     "jasmine": "^2.5.3",
     "mocha": "^3.2.0"
+  },
+  "ava": {
+    "require": ["./md-compiler"],
+    "source": [
+      "**/*.md"
+    ]
   }
 }
