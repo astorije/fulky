@@ -5,6 +5,8 @@ const fs = require('fs');
 const tokenize = require('./lib/tokenize');
 const parse = require('./lib/parse');
 
+const runner = process.argv[1].split('/').pop();
+
 function lex(content) {
   const tokens = [];
 
@@ -38,21 +40,45 @@ require.extensions['.md'] = function (module, filename) {
   const globals = parsed.globals;
   const examples = parsed.code;
 
-  const test = `
-    'use strict';
+  let test;
 
-    ${globals}
+  if (runner === 'tape') {
+    test = `
+      'use strict';
 
-    describe('Markdown file: ${filename}', function () {
+      const test = require('tape');
+
+      ${globals}
+
       ${examples.map((example, index) => {
         let preview = example.replace(/'/g, "\\'");
         preview = preview.substr(0, preview.indexOf("\n")) || preview;
 
-        return `it('should run API example #${index + 1}: ${preview}', function () {
+        return `test('Markdown file ${filename} should run API example #${index + 1}: ${preview}', function (t) {
           ${example}
+
+          t.end();
         });`;
-      }).join("\n")}
-    });`;
+        }).join("\n")
+      }
+    `;
+  } else {
+    test = `
+      'use strict';
+
+      ${globals}
+
+      describe('Markdown file: ${filename}', function () {
+        ${examples.map((example, index) => {
+          let preview = example.replace(/'/g, "\\'");
+          preview = preview.substr(0, preview.indexOf("\n")) || preview;
+
+          return `it('should run API example #${index + 1}: ${preview}', function () {
+            ${example}
+          });`;
+        }).join("\n")}
+      });`;
+  }
 
   return module._compile(test, filename);
 };

@@ -35,3 +35,9 @@ Then run it with:
 ```sh
 jasmine
 ```
+
+### Use it with [Tape](https://github.com/substack/tape)
+
+```sh
+tape -r fulky/md-compiler *.md
+```

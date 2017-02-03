@@ -6,6 +6,7 @@
   "scripts": {
     "fixtures-jasmine": "jasmine JASMINE_CONFIG_PATH=test/runners/jasmine.json",
     "fixtures-mocha": "mocha --compilers md:md-compiler test/**/*.md",
+    "fixtures-tape": "tape -r ./md-compiler",
     "test": "mocha"
   },
   "repository": {
@@ -21,6 +22,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "jasmine": "^2.5.3",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "tape": "^4.6.3"
   }
 }
