@@ -56,3 +56,30 @@ require.extensions['.md'] = function (module, filename) {
 
   return module._compile(test, filename);
 };
+
+module.exports = {
+  process(src, path) {
+    const tokens = lex(src);
+    const parsed = parse(tokens);
+    const globals = parsed.globals;
+    const examples = parsed.code;
+
+    const test = `
+      'use strict';
+
+      ${globals}
+
+      describe('Markdown file: ${path}', function () {
+        ${examples.map((example, index) => {
+          let preview = example.replace(/'/g, "\\'");
+          preview = preview.substr(0, preview.indexOf("\n")) || preview;
+
+          return `test('should run API example #${index + 1}: ${preview}', function () {
+            ${example}
+          });`;
+        }).join("\n")}
+      });`;
+
+    return test;
+  }
+};

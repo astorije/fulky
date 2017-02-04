@@ -1,0 +1,7 @@
+{
+  "moduleFileExtensions": ["js", "md"],
+  "testRegex": "\\.md$",
+  "transform": {
+    "\\.md$": "<rootDir>/md-compiler.js"
+  }
+}

@@ -35,3 +35,23 @@ Then run it with:
 ```sh
 jasmine
 ```
+
+### Use it with [Jest](https://facebook.github.io/jest/)
+
+In your configuration file, add:
+
+```json
+{
+  "moduleFileExtensions": ["js", "md"],
+  "testRegex": "\\.md$",
+  "transform": {
+    "\\.md$": "fulky/md-compiler.js"
+  }
+}
+```
+
+Then run it with:
+
+```sh
+jest
+```
