@@ -1,2 +1,6 @@
 node_modules/
 npm-debug.log
+
+# Test coverage
+.nyc_output/
+coverage/
