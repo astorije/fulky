@@ -14,6 +14,8 @@ Run it with:
 mocha --compilers md:fulky/md-compiler *.md
 ```
 
+Or add `--compilers md:fulky/md-compiler` to your `mocha.opts` file.
+
 ### Use it with [Jasmine](https://jasmine.github.io/)
 
 In your `spec/support/jasmine.json` configuration file, add:
