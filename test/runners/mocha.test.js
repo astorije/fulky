@@ -6,7 +6,7 @@ const spawnSync = require('child_process').spawnSync;
 function runFixture(fixture) {
   return spawnSync(
     'node_modules/.bin/mocha',
-    ['--compilers', 'md:md-compiler', `test/fixtures/${fixture}.md`],
+    ['--require', 'md-compiler', `test/fixtures/${fixture}.md`],
     { encoding: 'utf-8' }
   );
 }

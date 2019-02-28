@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "fixtures-jasmine": "jasmine JASMINE_CONFIG_PATH=test/runners/jasmine.json",
-    "fixtures-mocha": "mocha --compilers md:md-compiler test/**/*.md",
+    "fixtures-mocha": "mocha --require md-compiler test/**/*.md",
     "test": "mocha"
   },
   "repository": {

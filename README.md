@@ -11,10 +11,10 @@
 Run it with:
 
 ```sh
-mocha --compilers md:fulky/md-compiler *.md
+mocha --require fulky/md-compiler *.md
 ```
 
-Or add `--compilers md:fulky/md-compiler` to your `mocha.opts` file.
+Or add `--require fulky/md-compiler` to your `mocha.opts` file.
 
 ### Use it with [Jasmine](https://jasmine.github.io/)
 
